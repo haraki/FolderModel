@@ -130,11 +130,17 @@ public:
 
     int refresh();
 
+    /// Current directory information
+
     using QAbstractTableModel::index;
     QModelIndex index(const QString &path) const;
 
     QModelIndex setRootPath(const QString& path);
     QString rootPath() const;
+
+    int fileNum();              // ファイル数を返す(ディレクトリは含まない)
+    int dirNum();               // ディレクトリ数を返す(".." は除外)
+    int fileDirNum();           // fileNum() + dirNum()
 
     /// Filter
 
@@ -193,21 +199,31 @@ public:
     void setFont(const QFont& font);
     void initBrushes(const QMap<ColorRoleType, QColor>& colors, bool folderColorTopPrio);
 
+    /// Select
+
+    QItemSelectionModel* selectionModel();
+    void setSelect(int row, QItemSelectionModel::SelectionFlags selectionFlags, const QModelIndex &parentIndex);
+    void setSelectAll();
+    QModelIndexList selectedIndexList() const;
+    void clearSelected();
+
 Q_SIGNALS:
     void rootPathChanged(const QString& path);
 
 private:
+    int getFileDirNum(FilterFlags filterFlags);
+
     QBrush textBrush(const QModelIndex& index) const;
     QBrush backgroundBrush(const QModelIndex& index) const;
     QBrush brush(ColorRoleType colorRole) const;
 
     bool isSelected(const QModelIndex& index) const;
 
-    void emitRootPathChanged(const QString& path);
-
     bool lessThan(const QFileInfo& l_info, const QFileInfo& r_info) const;
     bool sectionTypeLessThan(const QFileInfo& l_info, const QFileInfo& r_info,
                              SectionType sectionType, SectionType sectionType2nd, SortCaseSensitivity caseSensitivity) const;
+
+    void emitRootPathChanged(const QString& path);
 
     enum Roles
     {

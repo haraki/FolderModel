@@ -332,6 +332,77 @@ QModelIndex FolderModel::setRootPath(const QString& path)
     return index(path);
 }
 
+QString FolderModel::rootPath() const
+{
+    return m_rootPath;
+}
+
+int FolderModel::fileNum()
+{
+    return getFileDirNum(FilterFlag::Files);
+}
+
+int FolderModel::dirNum()
+{
+    return getFileDirNum(FilterFlag::Dirs);
+}
+
+int FolderModel::fileDirNum()
+{
+    return getFileDirNum(FilterFlag::Files | FilterFlag::Dirs);
+}
+
+int FolderModel::getFileDirNum(FilterFlags filterFlags)
+{
+    QFileInfoList fileInfoList = m_dir.entryInfoList();
+    if(fileInfoList.isEmpty())
+    {
+        return 0;
+    }
+
+    filterFlags &= m_filterFlags;       // Files / Dirs フラグは、引数(filterFlags)と m_filterFlags の両方で有効でなければならない
+
+    int count = 0;
+    foreach(const QFileInfo& fileInfo, fileInfoList)
+    {
+        if(fileInfo.fileName() == "..")
+        {
+            continue;
+        }
+        else
+        {
+            if(fileInfo.isDir())
+            {
+                if(!(filterFlags & FilterFlag::Dirs))
+                {
+                    continue;
+                }
+            }
+            else if(fileInfo.isFile())
+            {
+                if(!(filterFlags & FilterFlag::Files))
+                {
+                    continue;
+                }
+            }
+
+            if(fileInfo.isHidden() && !(m_filterFlags & FilterFlag::Hidden))
+            {
+                continue;
+            }
+#ifdef Q_OS_WIN
+            if(Win32::isSystemFile(fileInfo.absoluteFilePath()) && !(m_filterFlags & FilterFlag::System))
+            {
+                continue;
+            }
+#endif
+        }
+        count++;
+    }
+
+    return count;
+}
+
 int FolderModel::refresh()
 {
     QFileInfoList fileInfoList = m_dir.entryInfoList();
@@ -531,11 +602,6 @@ bool FolderModel::sectionTypeLessThan(const QFileInfo& l_info, const QFileInfo& 
     }
 
     return false;
-}
-
-QString FolderModel::rootPath() const
-{
-    return m_rootPath;
 }
 
 /// Filter
@@ -923,6 +989,40 @@ QBrush FolderModel::brush(ColorRoleType colorRole) const
 }
 
 /// Select
+
+QItemSelectionModel* FolderModel::selectionModel()
+{
+    return &m_itemSelectionModel;
+}
+
+void FolderModel::setSelect(int row, QItemSelectionModel::SelectionFlags selectionFlags, const QModelIndex &parentIndex)
+{
+    QItemSelection selection(index(row, 0, parentIndex), index(row, columnCount() - 1, parentIndex));
+    m_itemSelectionModel.select(selection, selectionFlags);
+}
+
+void FolderModel::setSelectAll()
+{
+    const QModelIndex& parentIndex = index(rootPath());
+
+    for(int row = 0;row < rowCount(parentIndex);row++)
+    {
+        if(fileName(index(row, 0, parentIndex)) != "..")
+        {
+            setSelect(row, QItemSelectionModel::Select, parentIndex);
+        }
+    }
+}
+
+QModelIndexList FolderModel::selectedIndexList() const
+{
+    return m_itemSelectionModel.selectedRows();
+}
+
+void FolderModel::clearSelected()
+{
+    m_itemSelectionModel.clear();
+}
 
 bool FolderModel::isSelected(const QModelIndex& index) const
 {
