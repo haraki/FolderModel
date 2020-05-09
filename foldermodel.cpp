@@ -48,7 +48,7 @@ FolderModel::FolderModel(QObject *parent/* = Q_NULLPTR*/)
         SectionType::LastModified,
     };
 
-    m_dir.setFilter(QDir::AllEntries | QDir::NoDot);
+    m_dir.setFilter(QDir::AllEntries | QDir::AccessMask | QDir::NoDot);
     m_dir.setNameFilters(m_nameFilters);
 
     setRootPath(m_rootPath);
