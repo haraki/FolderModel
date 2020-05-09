@@ -19,7 +19,7 @@ FolderModel::FolderModel(QObject *parent/* = Q_NULLPTR*/)
     , m_rootPath(QDir::homePath())
     , m_dir()
     , m_filterFlags(FilterFlag::AllEntrys)
-    , m_nameFilters({"..", "*"})
+    , m_nameFilters({"*"})
     , m_sortSectionType(SectionType::FileName)
     , m_sortSectionType2nd(SectionType::Unknown)
     , m_sortDirsType(SortDirsType::NoSpecify)
@@ -49,7 +49,7 @@ FolderModel::FolderModel(QObject *parent/* = Q_NULLPTR*/)
     };
 
     m_dir.setFilter(QDir::AllEntries | QDir::AccessMask | QDir::NoDot);
-    m_dir.setNameFilters(m_nameFilters);
+    m_dir.setNameFilters({"..", "*"});
 
     setRootPath(m_rootPath);
 }
@@ -618,9 +618,21 @@ FilterFlags FolderModel::filterFlags() const
 
 void FolderModel::setNameFilters(const QStringList &nameFilters)
 {
-    m_nameFilters = nameFilters;
-    m_nameFilters.push_front("..");
-    m_dir.setNameFilters(m_nameFilters);
+    m_nameFilters.clear();
+
+    foreach(const QString& nf, nameFilters)
+    {
+        if(nf == "." || nf == "..")
+        {
+            continue;
+        }
+        m_nameFilters.push_back(nf);
+    }
+
+    QStringList _nameFilters = {".."};
+    _nameFilters += m_nameFilters;
+
+    m_dir.setNameFilters(_nameFilters);
 }
 
 QStringList FolderModel::nameFilters() const
