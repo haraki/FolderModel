@@ -841,36 +841,6 @@ QDateTime FolderModel::lastModified(const QModelIndex &index) const
     return QDateTime();
 }
 
-/// Operation
-
-QModelIndex FolderModel::mkdir(const QString &name)
-{
-    if(m_dir.mkdir(name))
-    {
-        refresh();
-
-        for(int row = 0;row < m_fileInfoList.count();row++)
-        {
-            if(m_fileInfoList[row].fileName() == name)
-            {
-                return index(row, 0);
-            }
-        }
-    }
-
-    return QModelIndex();
-}
-
-bool FolderModel::rmdir(const QModelIndex &index)
-{
-    return m_dir.rmpath(filePath(index));
-}
-
-bool FolderModel::remove(const QModelIndex &index)
-{
-    return m_dir.remove(fileName(index));
-}
-
 /// Appearance
 
 void FolderModel::setFont(const QFont& font)

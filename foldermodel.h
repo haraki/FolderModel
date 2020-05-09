@@ -188,12 +188,6 @@ public:
     QDateTime lastModified(const QModelIndex &index) const;
     QIcon fileIcon(const QModelIndex &index) const;
 
-    /// Operation
-
-    QModelIndex mkdir(const QString &name);
-    bool rmdir(const QModelIndex &index);
-    bool remove(const QModelIndex &index);
-
     /// Appearance
 
     void setFont(const QFont& font);
