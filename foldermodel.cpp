@@ -16,7 +16,7 @@ FolderModel::FolderModel(QObject *parent/* = Q_NULLPTR*/)
     , m_itemSelectionModel(this)
     , m_fileIconProvider()
     , m_fileSystemWatcher(this)
-    , m_rootPath(QDir::homePath())
+    , m_rootPath("")
     , m_dir()
     , m_filterFlags(FilterFlag::AllEntrys)
     , m_nameFilters({"*"})
@@ -50,8 +50,6 @@ FolderModel::FolderModel(QObject *parent/* = Q_NULLPTR*/)
 
     m_dir.setFilter(QDir::AllEntries | QDir::AccessMask | QDir::NoDot);
     m_dir.setNameFilters({"..", "*"});
-
-    setRootPath(m_rootPath);
 }
 
 FolderModel::~FolderModel()
