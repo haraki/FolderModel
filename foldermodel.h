@@ -135,7 +135,7 @@ public:
     using QAbstractTableModel::index;
     QModelIndex index(const QString &path) const;
 
-    QModelIndex setRootPath(const QString& path);
+    int setRootPath(const QString& path);
     QString rootPath() const;
 
     int fileNum();              // ファイル数を返す(ディレクトリは含まない)

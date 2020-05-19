@@ -305,11 +305,11 @@ QModelIndex FolderModel::index(const QString &path) const
     return QModelIndex();
 }
 
-QModelIndex FolderModel::setRootPath(const QString& path)
+int FolderModel::setRootPath(const QString& path)
 {
     if(!QFileInfo::exists(path))
     {
-        return QModelIndex();
+        return -1;
     }
 
     QString oldPath = m_rootPath;
@@ -322,12 +322,12 @@ QModelIndex FolderModel::setRootPath(const QString& path)
     {
         m_rootPath = oldPath;
 
-        return QModelIndex();
+        return -1;
     }
 
     emitRootPathChanged(path);
 
-    return index(path);
+    return 0;
 }
 
 QString FolderModel::rootPath() const

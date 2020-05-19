@@ -93,7 +93,7 @@ void MainWindow::on_folderView_doubleClicked(const QModelIndex &index)
 
     m_rootPathChanging = true;
 
-    if(!m_folderModel->setRootPath(newPath).isValid())
+    if(m_folderModel->setRootPath(newPath) < 0)
     {
         m_rootPathChanging = false;
     }
