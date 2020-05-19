@@ -975,21 +975,19 @@ QItemSelectionModel* FolderModel::selectionModel()
     return &m_itemSelectionModel;
 }
 
-void FolderModel::setSelect(int row, QItemSelectionModel::SelectionFlags selectionFlags, const QModelIndex &parentIndex)
+void FolderModel::setSelect(int row, QItemSelectionModel::SelectionFlags selectionFlags)
 {
-    QItemSelection selection(index(row, 0, parentIndex), index(row, columnCount() - 1, parentIndex));
+    QItemSelection selection(index(row, 0), index(row, columnCount() - 1));
     m_itemSelectionModel.select(selection, selectionFlags);
 }
 
 void FolderModel::setSelectAll()
 {
-    const QModelIndex& parentIndex = index(rootPath());
-
-    for(int row = 0;row < rowCount(parentIndex);row++)
+    for(int row = 0;row < rowCount();row++)
     {
-        if(fileName(index(row, 0, parentIndex)) != "..")
+        if(fileName(index(row, 0)) != "..")
         {
-            setSelect(row, QItemSelectionModel::Select, parentIndex);
+            setSelect(row, QItemSelectionModel::Select);
         }
     }
 }

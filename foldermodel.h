@@ -196,7 +196,7 @@ public:
     /// Select
 
     QItemSelectionModel* selectionModel();
-    void setSelect(int row, QItemSelectionModel::SelectionFlags selectionFlags, const QModelIndex &parentIndex);
+    void setSelect(int row, QItemSelectionModel::SelectionFlags selectionFlags);
     void setSelectAll();
     QModelIndexList selectedIndexList() const;
     void clearSelected();
