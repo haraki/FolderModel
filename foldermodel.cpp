@@ -41,10 +41,10 @@ FolderModel::FolderModel(QObject *parent/* = Q_NULLPTR*/)
         SectionType::FileName,
         SectionType::FileType,
         SectionType::FileSize,
-        SectionType::Owner,
-        SectionType::Group,
-        SectionType::Permissions,
-        SectionType::Created,
+//        SectionType::Owner,
+//        SectionType::Group,
+//        SectionType::Permissions,
+//        SectionType::Created,
         SectionType::LastModified,
     };
 
