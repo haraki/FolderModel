@@ -121,7 +121,7 @@ QVariant FolderModel::data(const QModelIndex &index, int role) const
 
     QVariant ret = QVariant();
 
-    SectionType sectionType = static_cast<SectionType>(index.column());
+    SectionType sectionType = m_sectionTypeList[index.column()];
 
     switch(role)
     {
