@@ -114,7 +114,7 @@ int FolderModel::columnCount(const QModelIndex &parent) const
 
 QVariant FolderModel::data(const QModelIndex &index, int role) const
 {
-    if(!index.isValid())
+    if(!index.isValid() || index.column() >= m_sectionTypeList.count())
     {
         return QVariant();
     }
