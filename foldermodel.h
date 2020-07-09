@@ -132,7 +132,7 @@ public:
 
     /// Current directory information
 
-    using QAbstractTableModel::index;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     QModelIndex index(const QString &path) const;
 
     int setRootPath(const QString& path);

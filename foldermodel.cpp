@@ -4,6 +4,7 @@
 #include <QBrush>
 #include <QFontMetrics>
 #include <QDebug>
+#include "misc.h"
 #include "foldermodel.h"
 #ifdef Q_OS_WIN
 #include "win32.h"
@@ -288,6 +289,21 @@ QVariant FolderModel::data(const QModelIndex &index, int role) const
     }
 
 //    qDebug() << "data(" << modelIndex << "," << static_cast<Qt::ItemDataRole>(role) << ") : ret = " << ret;
+
+    return ret;
+}
+
+QModelIndex FolderModel::index(int row, int column, const QModelIndex &parent/* = QModelIndex()*/) const
+{
+    row = Clamp(row, 0, m_fileInfoList.count() - 1);
+    column = Clamp(column, 0, m_sectionTypeList.size() - 1);
+
+    QModelIndex ret = QAbstractTableModel::index(row, column, parent);
+
+    if(ret.row() < 0)
+    {
+        qDebug() << "=================== FolderModel::index() row : " << row << ", column : " << column;
+    }
 
     return ret;
 }
